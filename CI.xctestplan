@@ -9,10 +9,27 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
-    "performanceAntipatternCheckerEnabled" : true
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:EssentialFeed.xcodeproj",
+          "identifier" : "271B41FF2EE5AB5B00849874",
+          "name" : "EssentialFeed"
+        }
+      ]
+    },
+    "performanceAntipatternCheckerEnabled" : true,
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:EssentialFeed.xcodeproj",
+        "identifier" : "2754830B2EFDBCE700E95CD2",
+        "name" : "EssentialFeedAPIEndToEndTests"
+      }
+    },
     {
       "parallelizable" : false,
       "target" : {
