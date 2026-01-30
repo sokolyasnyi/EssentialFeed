@@ -82,6 +82,8 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
                 XCTAssertEqual(loadedFeed, expectedFeed, file: file, line: line)
             case let .failure(error):
                 XCTFail("Expected successful feed result, got \(error) instead", file: file, line: line)
+            @unknown default:
+                 XCTFail("Unknown enum case")
             }
 
             exp.fulfill()
