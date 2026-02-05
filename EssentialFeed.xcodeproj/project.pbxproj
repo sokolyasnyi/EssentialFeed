@@ -43,6 +43,7 @@
 		275483072EFDBA7600E95CD2 /* EssentialFeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed.xctestplan; sourceTree = "<group>"; };
 		2754830C2EFDBCE700E95CD2 /* EssentialFeedAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		276FAF572F2D2C790003F9B3 /* EssentialFeedCacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedCacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		27A2D0EC2F352A7200557C3B /* EssentialFeedAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = EssentialFeedAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -130,6 +131,7 @@
 		271B41F62EE5AB5B00849874 = {
 			isa = PBXGroup;
 			children = (
+				27A2D0EC2F352A7200557C3B /* EssentialFeedAPIEndToEndTests.xctestplan */,
 				275483072EFDBA7600E95CD2 /* EssentialFeed.xctestplan */,
 				27181BFD2EE74D5200B4CDD1 /* CI.xctestplan */,
 				271B42022EE5AB5B00849874 /* EssentialFeed */,
@@ -633,6 +635,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.sokolov-stanislav.EssentialFeedAPIEndToEndTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -652,6 +655,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.sokolov-stanislav.EssentialFeedAPIEndToEndTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
