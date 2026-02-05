@@ -45,7 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		27181BFD2EE74D5200B4CDD1 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
+		27181BFD2EE74D5200B4CDD1 /* CI_macOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_macOS.xctestplan; sourceTree = "<group>"; };
 		271B42002EE5AB5B00849874 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		271B42092EE5AB5B00849874 /* EssentialFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		275483072EFDBA7600E95CD2 /* EssentialFeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed.xctestplan; sourceTree = "<group>"; };
@@ -55,6 +55,7 @@
 		27A2D0F22F352C4900557C3B /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A2D0FA2F352C4A00557C3B /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A2D1072F352C9900557C3B /* EssentialFeediOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = EssentialFeediOS.xctestplan; sourceTree = "<group>"; };
+		27A2D1082F352DBD00557C3B /* CI_iOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_iOS.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -170,7 +171,8 @@
 				27A2D1072F352C9900557C3B /* EssentialFeediOS.xctestplan */,
 				27A2D0EC2F352A7200557C3B /* EssentialFeedAPIEndToEndTests.xctestplan */,
 				275483072EFDBA7600E95CD2 /* EssentialFeed.xctestplan */,
-				27181BFD2EE74D5200B4CDD1 /* CI.xctestplan */,
+				27181BFD2EE74D5200B4CDD1 /* CI_macOS.xctestplan */,
+				27A2D1082F352DBD00557C3B /* CI_iOS.xctestplan */,
 				271B42022EE5AB5B00849874 /* EssentialFeed */,
 				271B420D2EE5AB5B00849874 /* EssentialFeedTests */,
 				2754830D2EFDBCE700E95CD2 /* EssentialFeedAPIEndToEndTests */,
