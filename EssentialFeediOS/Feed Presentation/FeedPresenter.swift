@@ -20,7 +20,7 @@ final class FeedPresenter {
     typealias Observer<T> = (T) -> Void
 
     var feedView: FeedView?
-    weak var loadingView: FeedLoadingView?
+    var loadingView: FeedLoadingView?
 
     private let feedLoader: FeedLoader
 
