@@ -125,6 +125,7 @@ Location</string>
                         <connections>
                             <outlet property="dataSource" destination="dSg-IM-mcP" id="O4v-q0-1aG"/>
                             <outlet property="delegate" destination="dSg-IM-mcP" id="80L-RY-8qn"/>
+                            <outlet property="prefetchDataSource" destination="dSg-IM-mcP" id="FaX-mv-kbI"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="My Feed" id="WTQ-kO-1Nt"/>
