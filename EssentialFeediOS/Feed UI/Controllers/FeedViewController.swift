@@ -11,7 +11,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     
     private var onViewIsAppearing: ((FeedViewController) -> Void)?
 
-    internal var refreshController: FeedRefreshController?
+    @IBOutlet public var refreshController: FeedRefreshController?
     var tableModel = [FeedImageCellController]() {
         didSet { tableView.reloadData() }
     }
@@ -19,7 +19,6 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        refreshControl = refreshController?.view
         tableView.prefetchDataSource = self
 
         onViewIsAppearing = { [weak self] vc in
