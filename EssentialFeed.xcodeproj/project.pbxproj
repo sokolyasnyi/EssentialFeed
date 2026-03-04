@@ -106,29 +106,11 @@
 			);
 			target = 27A2D0F92F352C4A00557C3B /* EssentialFeediOSTests */;
 		};
-		27A7B2492F577EE20051FC69 /* Exceptions for "EssentialFeed" folder in "EssentialFeed" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Feed Feature/FeedImageDataLoader.swift",
-			);
-			target = 271B41FF2EE5AB5B00849874 /* EssentialFeed */;
-		};
-		27A7B24A2F577EE20051FC69 /* Exceptions for "EssentialFeed" folder in "EssentialFeediOS" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Feed Feature/FeedImageDataLoader.swift",
-			);
-			target = 27A2D0F12F352C4900557C3B /* EssentialFeediOS */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		271B42022EE5AB5B00849874 /* EssentialFeed */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				27A7B2492F577EE20051FC69 /* Exceptions for "EssentialFeed" folder in "EssentialFeed" target */,
-				27A7B24A2F577EE20051FC69 /* Exceptions for "EssentialFeed" folder in "EssentialFeediOS" target */,
-			);
 			path = EssentialFeed;
 			sourceTree = "<group>";
 		};
