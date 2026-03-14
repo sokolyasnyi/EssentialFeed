@@ -1,8 +1,8 @@
 {
   "configurations" : [
     {
-      "id" : "98AB9E98-40B8-4A36-8229-33720953CB12",
-      "name" : "Test Scheme Action",
+      "id" : "923072FE-6F81-4FC5-9600-E324B4EDA913",
+      "name" : "Configuration 1",
       "options" : {
 
       }
@@ -17,12 +17,6 @@
           "name" : "EssentialApp"
         }
       ]
-    },
-    "performanceAntipatternCheckerEnabled" : true,
-    "targetForVariableExpansion" : {
-      "containerPath" : "container:EssentialApp.xcodeproj",
-      "identifier" : "27C831BF2F5B4D4E0037161F",
-      "name" : "EssentialApp"
     },
     "testExecutionOrdering" : "random"
   },

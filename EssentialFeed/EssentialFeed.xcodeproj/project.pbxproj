@@ -68,20 +68,22 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		27181BFD2EE74D5200B4CDD1 /* CI_macOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_macOS.xctestplan; sourceTree = "<group>"; };
 		271B42002EE5AB5B00849874 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		271B42092EE5AB5B00849874 /* EssentialFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		275483072EFDBA7600E95CD2 /* EssentialFeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed.xctestplan; sourceTree = "<group>"; };
 		2754830C2EFDBCE700E95CD2 /* EssentialFeedAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		276FAF572F2D2C790003F9B3 /* EssentialFeedCacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedCacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		27A2D0EC2F352A7200557C3B /* EssentialFeedAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeedAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		27A2D0F22F352C4900557C3B /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A2D0FA2F352C4A00557C3B /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		27A2D1072F352C9900557C3B /* EssentialFeediOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeediOS.xctestplan; sourceTree = "<group>"; };
-		27A2D1082F352DBD00557C3B /* CI_iOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_iOS.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		271054632F635A8F00CFB443 /* Exceptions for "Test plans" folder in "EssentialFeed" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				EssentialFeed.xctestplan,
+			);
+			target = 271B41FF2EE5AB5B00849874 /* EssentialFeed */;
+		};
 		275483172EFDCA3200E95CD2 /* Exceptions for "EssentialFeedTests" folder in "EssentialFeedAPIEndToEndTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -109,6 +111,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		2710537C2F6359D500CFB443 /* Test plans */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				271054632F635A8F00CFB443 /* Exceptions for "Test plans" folder in "EssentialFeed" target */,
+			);
+			path = "Test plans";
+			sourceTree = "<group>";
+		};
 		271B42022EE5AB5B00849874 /* EssentialFeed */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = EssentialFeed;
@@ -200,11 +210,7 @@
 		271B41F62EE5AB5B00849874 = {
 			isa = PBXGroup;
 			children = (
-				27A2D1072F352C9900557C3B /* EssentialFeediOS.xctestplan */,
-				27A2D0EC2F352A7200557C3B /* EssentialFeedAPIEndToEndTests.xctestplan */,
-				275483072EFDBA7600E95CD2 /* EssentialFeed.xctestplan */,
-				27181BFD2EE74D5200B4CDD1 /* CI_macOS.xctestplan */,
-				27A2D1082F352DBD00557C3B /* CI_iOS.xctestplan */,
+				2710537C2F6359D500CFB443 /* Test plans */,
 				271B42022EE5AB5B00849874 /* EssentialFeed */,
 				271B420D2EE5AB5B00849874 /* EssentialFeedTests */,
 				2754830D2EFDBCE700E95CD2 /* EssentialFeedAPIEndToEndTests */,
@@ -270,6 +276,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				2710537C2F6359D500CFB443 /* Test plans */,
 				271B42022EE5AB5B00849874 /* EssentialFeed */,
 			);
 			name = EssentialFeed;

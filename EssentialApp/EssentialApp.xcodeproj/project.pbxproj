@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		27C299B32F60A8F300D1E42C /* EssentialApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 27C299B22F60A8F300D1E42C /* EssentialApp.xctestplan */; };
 		27C834E22F5B52500037161F /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27C834E12F5B52500037161F /* EssentialFeed.framework */; };
 		27C834E32F5B52500037161F /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27C834E12F5B52500037161F /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		27C834E62F5B52530037161F /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27C834E52F5B52530037161F /* EssentialFeediOS.framework */; };
@@ -40,7 +39,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		27C299B22F60A8F300D1E42C /* EssentialApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialApp.xctestplan; sourceTree = "<group>"; };
 		27C831C02F5B4D4E0037161F /* EssentialApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27C831D62F5B4D4F0037161F /* EssentialAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		27C834E12F5B52500037161F /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +56,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		271054742F65720400CFB443 /* Test plans */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Test plans";
+			sourceTree = "<group>";
+		};
 		27C831C22F5B4D4E0037161F /* EssentialApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -100,7 +103,7 @@
 				27C831D92F5B4D4F0037161F /* EssentialAppTests */,
 				27C834E02F5B52500037161F /* Frameworks */,
 				27C831C12F5B4D4E0037161F /* Products */,
-				27C299B22F60A8F300D1E42C /* EssentialApp.xctestplan */,
+				271054742F65720400CFB443 /* Test plans */,
 			);
 			sourceTree = "<group>";
 		};
@@ -139,6 +142,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				271054742F65720400CFB443 /* Test plans */,
 				27C831C22F5B4D4E0037161F /* EssentialApp */,
 			);
 			name = EssentialApp;
@@ -215,7 +219,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27C299B32F60A8F300D1E42C /* EssentialApp.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
