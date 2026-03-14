@@ -56,6 +56,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		271054742F65720400CFB443 /* Test plans */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Test plans";
+			sourceTree = "<group>";
+		};
 		27C831C22F5B4D4E0037161F /* EssentialApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -98,6 +103,7 @@
 				27C831D92F5B4D4F0037161F /* EssentialAppTests */,
 				27C834E02F5B52500037161F /* Frameworks */,
 				27C831C12F5B4D4E0037161F /* Products */,
+				271054742F65720400CFB443 /* Test plans */,
 			);
 			sourceTree = "<group>";
 		};
@@ -136,6 +142,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				271054742F65720400CFB443 /* Test plans */,
 				27C831C22F5B4D4E0037161F /* EssentialApp */,
 			);
 			name = EssentialApp;
@@ -274,7 +281,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -306,7 +313,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
