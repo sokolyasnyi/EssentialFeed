@@ -66,6 +66,22 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.simulateUserInitiatedFeedReload()
         loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
         assertThat(sut, isRendering: [image0, image1, image2, image3])
+        RunLoop.current.run(until: Date()+1)
+    }
+
+    func test_loadFeedCompletion_rendersSuccessfullyLoadedEmtpyFeedAfterNonEmptyFeed() {
+        let image0 = makeImage()
+        let image1 = makeImage()
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [image0, image1])
+        assertThat(sut, isRendering: [image0, image1])
+
+        sut.simulateUserInitiatedFeedReload()
+        loader.completeFeedLoading(with: [], at: 1)
+        assertThat(sut, isRendering: [])
+        RunLoop.current.run(until: Date()+1)
     }
 
     func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
@@ -80,6 +96,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.simulateUserInitiatedFeedReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0])
+        RunLoop.current.run(until: Date()+1)
     }
 
     func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
