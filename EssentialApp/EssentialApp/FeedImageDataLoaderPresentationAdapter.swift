@@ -25,8 +25,6 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
     func didRequestImage() {
         presenter?.didStartLoadingImageData(for: model)
 
-
-
         let model = self.model
 
         cancellable = imageLoader(model.imageURL).sink(
