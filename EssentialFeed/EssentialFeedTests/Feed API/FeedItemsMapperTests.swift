@@ -42,7 +42,6 @@ final class FeedItemsMapperTests: XCTestCase {
             id: UUID(),
             imageURL: URL(string: "http://a-url.com")!)
 
-
         let item2 = makeItem(
             id: UUID(),
             description: "a description",
@@ -57,11 +56,7 @@ final class FeedItemsMapperTests: XCTestCase {
     }
 
     // MARK: - Helpers
-
-    private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {
-        .failure(error)
-    }
-
+    
     private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String: Any]) {
         let item = FeedImage(id: id, description: description, location: location, url: imageURL)
         let json = [
