@@ -1,5 +1,5 @@
 //
-//  FeedViewController+TestHelpers.swift
+//  ListViewController+TestHelpers.swift
 //  EssentialFeed
 //
 //  Created by Станислав Соколов on 2/15/26.
@@ -8,7 +8,12 @@
 import UIKit
 import EssentialFeediOS
 
-extension FeedViewController {
+extension ListViewController {
+    override public func loadViewIfNeeded() {
+        super.loadViewIfNeeded()
+        tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
+    }
+
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()
@@ -69,8 +74,12 @@ extension FeedViewController {
         return simulateFeedImageViewVisible(at: index)?.renderedImage
     }
 
+    func simulateErrorViewTap() {
+        errorView.simulateTap()
+    }
+
     var errorMessage: String? {
-        return errorView?.message
+        return errorView.message
     }
 
     var isShowingLoadingIndicator: Bool {
@@ -78,7 +87,7 @@ extension FeedViewController {
     }
 
     func numberOfRenderedFeedImageViews() -> Int {
-        tableView.numberOfRows(inSection: feedImageSection)
+        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: feedImageSection)
     }
 
     func feedImageView(at row: Int) -> UITableViewCell? {

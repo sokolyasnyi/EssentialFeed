@@ -1,5 +1,5 @@
 //
-//  FeedViewController+Assertions.swift
+//  ListViewController+Assertions.swift
 //  EssentialFeed
 //
 //  Created by Станислав Соколов on 2/15/26.
@@ -10,7 +10,7 @@ import EssentialFeed
 import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
-    func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+    func assertThat(_ sut: ListViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
         sut.view.enforceLayoutCycle()
         
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
@@ -22,7 +22,7 @@ extension FeedUIIntegrationTests {
         }
     }
 
-    func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
+    func assertThat(_ sut: ListViewController, hasViewConfiguredFor image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedImageView(at: index)
 
         guard let cell = view as? FeedImageCell else {
