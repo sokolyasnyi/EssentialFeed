@@ -9,22 +9,26 @@ import UIKit
 import EssentialFeediOS
 
 extension ListViewController {
-    override public func loadViewIfNeeded() {
-        super.loadViewIfNeeded()
-        tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
-    }
-
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()
-            replaceRefreshControlWithFakeForiOS17Support()
+            prepareForFirstAppearance()
         }
 
         beginAppearanceTransition(true, animated: false)
         endAppearanceTransition()
     }
 
-    func replaceRefreshControlWithFakeForiOS17Support() {
+    private func prepareForFirstAppearance() {
+        setSmallFrameToPreventRenderingCells()
+        replaceRefreshControlWithFakeForiOS17PlusSupport()
+    }
+
+    private func setSmallFrameToPreventRenderingCells() {
+        tableView.frame = CGRect(x: 0, y: 0, width: 390, height: 1)
+    }
+
+    func replaceRefreshControlWithFakeForiOS17PlusSupport() {
         let fakeRefreshControl = FakeUIRefreshControl()
 
         refreshControl?.allTargets.forEach { target in
