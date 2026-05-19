@@ -121,7 +121,7 @@ private extension ListViewController {
         let cells: [CellController] = stubs.map { stub in
             let cellController = FeedImageCellController(viewModel: stub.viewModel, delegate: stub, selection: {})
             stub.controller = cellController
-            return CellController(cellController)
+            return CellController(id: UUID(), cellController)
         }
 
         display(cells)
