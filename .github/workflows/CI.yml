@@ -28,13 +28,14 @@ jobs:
       run: /usr/bin/xcodebuild -version
       
     - name: Build and Test macOS
-      run: xcodebuild clean build test -project EssentialFeed/EssentialFeed.xcodeproj -scheme "CI_macOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk macosx -destination "platform=macOS" -enableThreadSanitizer YES ONLY_ACTIVE_ARCH=YES -resultBundlePath TestResults
+      run: xcodebuild clean build test -project EssentialFeed/EssentialFeed.xcodeproj -scheme "CI_macOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk macosx -destination "platform=macOS" -enableThreadSanitizer YES ONLY_ACTIVE_ARCH=YES -resultBundlePath TestResults.xcresult
 
     - name: Build and Test iOS
-      run: xcodebuild clean build test -workspace EssentialApp/EssentialApp.xcworkspace -scheme "CI_iOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator -destination "platform=iOS Simulator,OS=26.1,name=iPhone 17 Pro" -enableThreadSanitizer YES ONLY_ACTIVE_ARCH=YES -resultBundlePath TestResults
+      run: xcodebuild clean build test -workspace EssentialApp/EssentialApp.xcworkspace -scheme "CI_iOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator -destination "platform=iOS Simulator,OS=26.1,name=iPhone 17 Pro" -enableThreadSanitizer YES ONLY_ACTIVE_ARCH=YES -resultBundlePath TestResults.xcresult
 
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: TestResults
-        path: TestResults
+    - name: Upload xcresult
+     if: always()
+     uses: actions/upload-artifact@v4
+     with:
+       name: xcresult
+       path: TestResults.xcresult
