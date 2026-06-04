@@ -36,22 +36,20 @@ extension LocalFeedLoader {
     }
 }
 
-private struct InvalidCache: Error {}
 
 extension LocalFeedLoader {
-    public typealias ValidationResult = Result<Void, Error>
 
-    public func validateCache(completion: @escaping (ValidationResult) -> Void) {
-        completion(ValidationResult {
-            do {
-                if let cache = try store.retrieve(),
-                   !FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
-                    throw InvalidCache()
-                }
-            } catch {
-                try store.deleteCachedFeed()
+    private struct InvalidCache: Error {}
+
+    public func validateCache() throws {
+        do {
+            if let cache = try store.retrieve(),
+               !FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
+                throw InvalidCache()
             }
-        })
+        } catch {
+            try store.deleteCachedFeed()
+        }
     }
 }
 
