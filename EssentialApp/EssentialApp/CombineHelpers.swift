@@ -204,6 +204,43 @@ extension AnyDispatchQueueScheduler {
     static var immediateOnMainQueue: Self {
         DispatchQueue.immediateWhenOnMainQueueSchedule.eraseToAnyScheduler()
     }
+
+    static func scheduler(for store: CoreDataFeedStore) -> AnyDispatchQueueScheduler {
+        CoreDataFeedStoreScheduler(store: store).eraseToAnyScheduler()
+    }
+
+    private struct CoreDataFeedStoreScheduler: Scheduler {
+        let store: CoreDataFeedStore
+
+        var now: SchedulerTimeType { .init(.now()) }
+
+        var minimumTolerance: SchedulerTimeType.Stride { .zero}
+
+        func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> any Cancellable {
+            if store.contextQueue == .main, Thread.isMainThread {
+                action()
+            } else {
+                store.perform(action)
+            }
+            return AnyCancellable {}
+        }
+
+        func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
+            if store.contextQueue == .main, Thread.isMainThread {
+                action()
+            } else {
+                store.perform(action)
+            }
+        }
+        
+        func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
+            if store.contextQueue == .main, Thread.isMainThread {
+                action()
+            } else {
+                store.perform(action)
+            }
+        }
+    }
 }
 
 extension Scheduler {
