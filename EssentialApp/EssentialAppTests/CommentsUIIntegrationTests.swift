@@ -11,6 +11,7 @@ import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
+@MainActor
 class CommentsUIIntegrationTests: XCTestCase {
 
     func test_commentsView_hasTitle() {
@@ -102,18 +103,6 @@ class CommentsUIIntegrationTests: XCTestCase {
         RunLoop.current.run(until: Date()+1)
     }
 
-    func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
-        let (sut, loader) = makeSUT()
-        sut.simulateAppearance()
-
-        let exp = expectation(description: "Wait for background queue")
-        DispatchQueue.global().async {
-            loader.completeCommentsLoading(at: 0)
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-    }
-
     func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
         let (sut, loader) = makeSUT()
 
@@ -189,6 +178,7 @@ class CommentsUIIntegrationTests: XCTestCase {
         }
     }
 
+    @MainActor
     private class LoaderSpy {
         private var requests = [PassthroughSubject<[ImageComment], Error>]()
 

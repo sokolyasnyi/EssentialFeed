@@ -10,13 +10,15 @@ import Combine
 import EssentialFeed
 import EssentialFeediOS
 
+@MainActor
 public final class CommentsUIComposer {
 
     private init() {}
 
     private typealias CommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
 
-    public static func commentsComposedWith(commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>) -> ListViewController {
+    public static func commentsComposedWith(
+        commentsLoader: @MainActor @escaping () -> AnyPublisher<[ImageComment], Error>) -> ListViewController {
 
         let presentationAdapter = CommentsPresentationAdapter(loader: { commentsLoader().dispatchOnMainThread() })
 
@@ -42,6 +44,7 @@ public final class CommentsUIComposer {
     }
 }
 
+@MainActor
 final class CommentsViewAdapter: ResourceView {
 
     private weak var controller: ListViewController?
