@@ -8,6 +8,7 @@
 import XCTest
 import EssentialFeed
 
+@MainActor
 final class LoadResourcePresenterTests: XCTestCase {
 
     func test_init_doesNotSendMessagesToView() {
