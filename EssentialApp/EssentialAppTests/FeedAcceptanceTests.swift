@@ -117,19 +117,15 @@ class FeedAcceptanceTests: XCTestCase {
     }
 
     private class HTTPClientStub: HTTPClient {
-        private class Task: HTTPClientTask {
-            func cancel() {}
-        }
 
-        private let stub: (URL) -> HTTPClient.Result
+        private let stub: (URL) -> Result<(Data, HTTPURLResponse), Error>
 
-        init(stub: @escaping (URL) -> HTTPClient.Result) {
+        init(stub: @escaping (URL) -> Result<(Data, HTTPURLResponse), Error>) {
             self.stub = stub
         }
 
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> any HTTPClientTask {
-            completion(stub(url))
-            return Task()
+        func get(from url: URL) async throws -> (Data, HTTPURLResponse) {
+            try stub(url).get()
         }
 
         static var offline: HTTPClientStub {
