@@ -14,14 +14,17 @@ import EssentialFeediOS
 class FeedAcceptanceTests: XCTestCase {
 
     func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() throws {
-        let feed = try launch(httpClient: .online(response), store: .empty)
+        let store = try CoreDataFeedStore.empty
+        let feed = try launch(httpClient: .online(response), store: store)
 
         XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 2)
         XCTAssertEqual(feed.renderedFeedImageData(at: 0), makeImageData0())
         XCTAssertEqual(feed.renderedFeedImageData(at: 1), makeImageData1())
         XCTAssertTrue(feed.canLoadMoreFeed)
 
-        feed.simulateLoadMoreFeedAction()
+        try store.withWaitingChanges {
+            feed.simulateLoadMoreFeedAction()
+        }
 
         XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 3)
         XCTAssertEqual(feed.renderedFeedImageData(at: 0), makeImageData0())
@@ -29,7 +32,9 @@ class FeedAcceptanceTests: XCTestCase {
         XCTAssertEqual(feed.renderedFeedImageData(at: 2), makeImageData2())
         XCTAssertTrue(feed.canLoadMoreFeed)
 
-        feed.simulateLoadMoreFeedAction()
+        try store.withWaitingChanges {
+            feed.simulateLoadMoreFeedAction()
+        }
 
         XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 3)
         XCTAssertEqual(feed.renderedFeedImageData(at: 0), makeImageData0())
@@ -43,7 +48,9 @@ class FeedAcceptanceTests: XCTestCase {
         let onlineFeed = launch(httpClient: .online(response), store: sharedStore)
         onlineFeed.simulateFeedImageViewVisible(at: 0)
         onlineFeed.simulateFeedImageViewVisible(at: 1)
-        onlineFeed.simulateLoadMoreFeedAction()
+        try sharedStore.withWaitingChanges {
+            onlineFeed.simulateLoadMoreFeedAction()
+        }
         onlineFeed.simulateFeedImageViewVisible(at: 2)
 
         let offlineFeed = launch(httpClient: .offline, store: sharedStore)
@@ -84,6 +91,20 @@ class FeedAcceptanceTests: XCTestCase {
     }
 
     // MARK: - Helpers
+
+    private func makeSUT(
+        httpClient: HTTPClientStub = .offline,
+        store: CoreDataFeedStore
+    ) -> (SceneDelegate, ListViewController) {
+        let sut = SceneDelegate(httpClient: httpClient, store: store)
+        sut.window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        sut.configureWindow()
+
+        let nav = sut.window?.rootViewController as? UINavigationController
+        let vc = nav?.topViewController as! ListViewController
+        vc.simulateAppearance()
+        return (sut, vc)
+    }
 
     private func launch(
         httpClient: HTTPClientStub = .offline,
@@ -206,6 +227,25 @@ class FeedAcceptanceTests: XCTestCase {
 
 @MainActor
 extension CoreDataFeedStore {
+    private struct Timeout: Error {}
+
+    func withWaitingChanges(_ action: () -> Void, timeout: TimeInterval = 1) throws {
+        let state2 = try retrieve()?.timestamp
+        action()
+
+        let maxDate = Date() + timeout
+
+        while Date() <= maxDate {
+            if try retrieve()?.timestamp != state2 {
+                return
+            }
+
+            RunLoop.current.run(until: Date())
+        }
+
+        throw Timeout()
+    }
+
     static var empty: CoreDataFeedStore {
         get throws {
             try CoreDataFeedStore(storeURL: URL(fileURLWithPath: "/dev/null"),
