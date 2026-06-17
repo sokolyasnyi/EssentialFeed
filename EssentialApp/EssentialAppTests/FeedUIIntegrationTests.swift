@@ -176,7 +176,7 @@ class FeedUIIntegrationTests: XCTestCase {
     func test_loadMoreActions_requestMoreFromLoader() {
         let (sut, loader) = makeSUT()
         sut.simulateAppearance()
-        loader.completeFeedLoading()
+        loader.completeFeedLoading(with: [makeImage()])
 
         XCTAssertEqual(loader.loadMoreCallCount, 0, "Expected no requests before until load more action")
 
@@ -205,13 +205,13 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.simulateAppearance()
         XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once view is appears")
 
-        loader.completeFeedLoading(at: 0)
+        loader.completeFeedLoading(with: [makeImage()], at: 0)
         XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once loading completes successfully")
 
         sut.simulateLoadMoreFeedAction()
         XCTAssertTrue(sut.isShowingLoadMoreFeedIndicator, "Expected loading indicator on load more action")
 
-        loader.completeLoadMore(at: 0)
+        loader.completeLoadMore(with: [makeImage()], at: 0)
         XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once user initiated loading completes successfully")
 
         sut.simulateLoadMoreFeedAction()
@@ -260,10 +260,10 @@ class FeedUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
-        loader.completeFeedLoading(with: [image0, image1])
 
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until views become visible")
 
+        loader.completeFeedLoading(with: [image0, image1])
         sut.simulateFeedImageViewVisible(at: 0)
         XCTAssertEqual(loader.loadedImageURLs, [image0.imageURL], "Expected first image URL request once first view becomes visible")
 
@@ -271,7 +271,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.imageURL, image1.imageURL], "Expected second image URL request once second view becomes visible")
     }
 
-    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() {
+    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() async throws {
         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
@@ -281,9 +281,13 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until is not visible")
 
         sut.simulateFeedImageViewNotVisible(at: 0)
+        let result0 = try await loader.imageResult(at: 0)
+        XCTAssertEqual(result0, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.imageURL], "Expected one cancelled image URL request once first image is not visible anymore")
 
         sut.simulateFeedImageViewNotVisible(at: 1)
+        let result1 = try await loader.imageResult(at: 1)
+        XCTAssertEqual(result1, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.imageURL, image1.imageURL], "Expected two cancelled image URL request once second image is also not visible anymore")
     }
 
@@ -318,11 +322,15 @@ class FeedUIIntegrationTests: XCTestCase {
 
         loader.completeImageLoading(at: 0)
         XCTAssertEqual(view0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator for first view once first image loading completes successfully")
-        XCTAssertEqual(view1?.isShowingImageLoadingIndicator, true, "Expected no loading indicator state change for second view once first image loading completes successfully")
+        XCTAssertEqual(sut.simulateFeedImageViewVisible(at: 1)?.isShowingImageLoadingIndicator, true, "Expected no loading indicator state change for second view once first image loading completes successfully")
 
         loader.completeImageLoadingWithError(at: 1)
         XCTAssertEqual(view0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator state change for first view once second image loading completes with error")
         XCTAssertEqual(view1?.isShowingImageLoadingIndicator, false, "Expected no loading indicator for second view once second image loading completes with error")
+
+        view1?.simulateRetryAction()
+        XCTAssertEqual(view0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator state change for first view once second image loading completes with error")
+        XCTAssertEqual(sut.simulateFeedImageViewVisible(at: 1)?.isShowingImageLoadingIndicator, true, "Expected loading indicator state change for second view on retry action")
     }
 
     func test_feedImageView_rendersImageLoadedFromURL() {
@@ -407,15 +415,15 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.imageURL, image1.imageURL, image0.imageURL, image1.imageURL], "Expected fourth image URL requests after second view retry action")
     }
 
-    func test_feedImageView_preloadImageURLWhenNearVisible() {
+    func test_feedImageView_preloadsImageURLWhenNearVisible() {
         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
-        loader.completeFeedLoading(with: [image0, image1])
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL request until image is near visible")
 
+        loader.completeFeedLoading(with: [image0, image1])
         sut.simulateFeedImageViewNearVisible(at: 0)
         XCTAssertEqual(loader.loadedImageURLs, [image0.imageURL], "Expected first image URL request once first image is near visible")
 
@@ -423,7 +431,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.imageURL, image1.imageURL], "Expected second image URL request once second image is near visible")
     }
 
-    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() {
+    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() async throws {
         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
@@ -433,9 +441,13 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL request until image is not near visible")
 
         sut.simulateFeedImageViewNotNearVisible(at: 0)
+        let result0 = try await loader.imageResult(at: 0)
+        XCTAssertEqual(result0, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.imageURL], "Expected first cancelled image URL request once first image is not near visible")
 
         sut.simulateFeedImageViewNotNearVisible(at: 1)
+        let result1 = try await loader.imageResult(at: 1)
+        XCTAssertEqual(result1, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.imageURL, image1.imageURL], "Expected second cancelled image URL request once second image is not near visible")
     }
 
@@ -557,11 +569,16 @@ class FeedUIIntegrationTests: XCTestCase {
         let loader = LoaderSpy()
         let sut = FeedUIComposer.feedComposedWith(
             feedLoader: loader.loadPublisher,
-            imageLoader: loader.loadImageDataPublisher,
+            imageLoader: loader.loadImageData,
             selection: selection
         )
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
+
+        addTeardownBlock { [weak loader] in
+            try await loader?.cancelPendingRequests()
+        }
+
         return (sut, loader)
     }
     
