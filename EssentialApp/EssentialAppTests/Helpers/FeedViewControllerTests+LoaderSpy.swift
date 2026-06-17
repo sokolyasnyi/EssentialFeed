@@ -5,7 +5,6 @@
 //  Created by Станислав Соколов on 2/15/26.
 //
 
-import Combine
 import Foundation
 import EssentialFeed
 import EssentialFeediOS
@@ -18,54 +17,56 @@ extension FeedUIIntegrationTests {
 
         // MARK: - FeedLoader
 
-        private var feedRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
+        private var feedLoader = EssentialAppTests.LoaderSpy<Void, Paginated<FeedImage>>()
 
         var loadFeedCallCount: Int {
-            feedRequests.count
+            feedLoader.requests.count
         }
 
-        func loadPublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
-            let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
-            feedRequests.append(publisher)
-            return publisher.eraseToAnyPublisher()
+        func loadFeed() async throws -> Paginated<FeedImage> {
+            try await feedLoader.load(())
         }
 
-        func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
-            feedRequests[index].send(Paginated<FeedImage>(items: feed, loadMorePublisher: { [weak self] in
-                self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
-            }))
-            feedRequests[index].send(completion: .finished)
+        func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) async {
+            await feedLoader.complete(
+                with: Paginated<FeedImage>(
+                    items: feed,
+                    loadMore: { @MainActor [weak self] in
+                        try await self?.loadMore() ?? Paginated(items: [])
+                    }),
+                at: index)
         }
 
-        func completeFeedLoadingWithError(at index: Int = 0) {
-            let error = NSError(domain: "an error", code: 0)
-            feedRequests[index].send(completion: .failure(error))
+        func completeFeedLoadingWithError(at index: Int = 0) async {
+            await feedLoader.fail(with: anyNSError(), at: index)
         }
 
         // MARK: - LoadMoreFeedLoader
 
-        private var loadMoreRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
+        private var loadMoreLoader = EssentialAppTests.LoaderSpy<Void, Paginated<FeedImage>>()
 
         var loadMoreCallCount: Int {
-            loadMoreRequests.count
+            loadMoreLoader.requests.count
         }
 
-        func loadMorePublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
-            let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
-            loadMoreRequests.append(publisher)
-            return publisher.eraseToAnyPublisher()
+        func loadMore() async throws -> Paginated<FeedImage> {
+            try await loadMoreLoader.load(())
         }
 
-        func completeLoadMore(with feed: [FeedImage] = [], lastPage: Bool = false, at index: Int = 0) {
-            loadMoreRequests[index].send(Paginated<FeedImage>(
-                items: feed,
-                loadMorePublisher: lastPage ? nil : { [weak self] in
-                    self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
-                }))
+        func completeLoadMore(with feed: [FeedImage] = [], lastPage: Bool = false, at index: Int = 0) async {
+            let loadMore: @Sendable () async throws -> Paginated<FeedImage> = { @MainActor [weak self] in
+                try await self?.loadMore() ?? Paginated(items: [])
+            }
+
+            await loadMoreLoader.complete(
+                with: Paginated<FeedImage>(
+                    items: feed,
+                    loadMore: lastPage ? nil : loadMore),
+                at: index)
         }
 
-        func completeLoadMoreWithError(at index: Int = 0) {
-            loadMoreRequests[index].send(completion: .failure(anyNSError()))
+        func completeLoadMoreWithError(at index: Int = 0) async {
+            await loadMoreLoader.fail(with: anyNSError(), at: index)
         }
 
         // MARK: - FeedImageDataLoader
@@ -87,12 +88,12 @@ extension FeedUIIntegrationTests {
             try await imageLoader.load(url)
         }
 
-        func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-            imageLoader.complete(with: imageData, at: index)
+        func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) async {
+            await imageLoader.complete(with: imageData, at: index)
         }
 
-        func completeImageLoadingWithError(at index: Int = 0) {
-            imageLoader.fail(with: anyNSError(), at: index)
+        func completeImageLoadingWithError(at index: Int = 0) async {
+            await imageLoader.fail(with: anyNSError(), at: index)
         }
 
         func imageResult(at index: Int, timeout: TimeInterval = 1) async throws -> AsyncResult {
@@ -101,6 +102,8 @@ extension FeedUIIntegrationTests {
 
         func cancelPendingRequests() async throws {
             try await imageLoader.cancelPendingRequests()
+            try await feedLoader.cancelPendingRequests()
+            try await loadMoreLoader.cancelPendingRequests()
         }
     }
 }
