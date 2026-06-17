@@ -53,7 +53,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var navigationController = UINavigationController(
         rootViewController: FeedUIComposer.feedComposedWith(
             feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-            imageLoader: makeLocalImageLoaderWithRemoteFallback,
+            imageLoader: loadLocalImageWithRemoteFallback,
             selection: showComments))
 
     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore & StoreScheduler & Sendable) {
@@ -64,7 +64,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
-        
+
         window = UIWindow(windowScene: scene)
         configureWindow()
     }
@@ -164,26 +164,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         return imageData
     }
-
-    private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
-        return Deferred {
-            Future { completion in
-                if #available(iOS 26.0, *) {
-                    Task.immediate {
-                        do {
-                            let image = try await self.loadLocalImageWithRemoteFallback(url: url)
-                            completion(.success(image))
-                        } catch {
-                            completion(.failure(error))
-                        }
-                    }
-                } else {
-                    // Fallback on earlier versions
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
 }
 
 protocol StoreScheduler {
@@ -192,6 +172,7 @@ protocol StoreScheduler {
 }
 
 extension CoreDataFeedStore: StoreScheduler {
+    @MainActor
     func schedule<T>(_ action: @escaping @Sendable () throws -> T) async rethrows -> T {
         if contextQueue == .main {
             return try action()
@@ -202,6 +183,7 @@ extension CoreDataFeedStore: StoreScheduler {
 }
 
 extension InMemoryFeedStore: StoreScheduler {
+    @MainActor
     func schedule<T>(_ action: @escaping @Sendable () throws -> T) async rethrows -> T {
         try action()
     }
