@@ -8,22 +8,11 @@
 import os
 import UIKit
 import CoreData
-import Combine
 import EssentialFeed
 import EssentialFeediOS
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-
-    private lazy var scheduler: AnyDispatchQueueScheduler = {
-        if let store = store as? CoreDataFeedStore {
-            return .scheduler(for: store)
-        }
-        return DispatchQueue(
-            label: "com.essentialdeveloper.infra.queue",
-            qos: .userInitiated
-        ).eraseToAnyScheduler()
-    }()
 
     private lazy var httpClient: HTTPClient = {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
@@ -42,10 +31,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             logger.fault("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
             return InMemoryFeedStore()
         }
-    }()
-
-    private lazy var localFeedLoader: LocalFeedLoader = {
-        LocalFeedLoader(store: store, currentDate: Date.init)
     }()
 
     private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
@@ -76,13 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        scheduler.schedule { [localFeedLoader, logger] in
-            do {
-                try localFeedLoader.validateCache()
-            } catch {
-                logger.error("Failed to validate cache with error: \(error.localizedDescription)")
-            }
-        }
+        validateCache()
     }
 
     private func showComments(for image: FeedImage) {
@@ -91,7 +70,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         navigationController.pushViewController(comments, animated: true)
     }
 
-    func loadComments(url: URL) -> () async throws -> [ImageComment] {
+    private func validateCache() {
+        if #available(iOS 26.0, *) {
+            Task.immediate { @MainActor in
+                await store.schedule { [store, logger] in
+                    do {
+                        let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
+                        try localFeedLoader.validateCache()
+                    } catch {
+                        logger.error("Failed to validate cache with error: \(error.localizedDescription)")
+                    }
+                }
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+
+    private func loadComments(url: URL) -> () async throws -> [ImageComment] {
         return { [httpClient] in
             let (data, response) = try await httpClient.get(from: url)
             return try ImageCommentsMapper.map(data, from: response)
