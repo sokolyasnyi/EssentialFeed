@@ -67,7 +67,7 @@ func found(_ data: Data) -> Result<Data?, Error> {
     return .success(data)
 }
 
-func expect(_ sut: FeedImageDataStore, toCompleteRetrievalWith expectedResult: Result<Data?, Error>, for url: URL,  file: StaticString = #file, line: UInt = #line) {
+func expect(_ sut: FeedImageDataStore, toCompleteRetrievalWith expectedResult: Result<Data?, Error>, for url: URL,  file: StaticString = #filePath, line: UInt = #line) {
 
     let receivedResult = Result { try sut.retrieve(dataForURL: url) }
 
@@ -80,7 +80,7 @@ func expect(_ sut: FeedImageDataStore, toCompleteRetrievalWith expectedResult: R
     }
 }
 
-func insert(_ data: Data, for url: URL, into sut: FeedImageDataStore, file: StaticString = #file, line: UInt = #line) {
+func insert(_ data: Data, for url: URL, into sut: FeedImageDataStore, file: StaticString = #filePath, line: UInt = #line) {
     do {
         try sut.insert(data, for: url)
     } catch {

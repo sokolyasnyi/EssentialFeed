@@ -14,7 +14,7 @@ public final class CommentsUIComposer {
 
     private init() {}
 
-    private typealias CommentsPresentationAdapter = AsyncLoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
+    private typealias CommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
 
     public static func commentsComposedWith(
         commentsLoader: @escaping () async throws -> [ImageComment]) -> ListViewController {

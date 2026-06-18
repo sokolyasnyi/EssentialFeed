@@ -14,7 +14,7 @@ public final class FeedUIComposer {
 
     private init() {}
 
-    private typealias FeedPresentationAdapter = AsyncLoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
+    private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
 
     public static func feedComposedWith(
         feedLoader: @MainActor @escaping () async throws -> Paginated<FeedImage>,

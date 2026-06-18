@@ -137,7 +137,7 @@ class ValidateFeedCacheUseCaseTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSUT(currentDate: @escaping () -> Date = Date.init,
-                         file: StaticString = #file,
+                         file: StaticString = #filePath,
                          line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         let store = FeedStoreSpy()
         let sut =  LocalFeedLoader(store: store, currentDate: currentDate)
@@ -146,7 +146,7 @@ class ValidateFeedCacheUseCaseTests: XCTestCase {
         return (sut: sut, store: store)
     }
 
-    private func expect(_ sut: LocalFeedLoader, toCompleteWith expectedResult: Result<Void, Error>, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: LocalFeedLoader, toCompleteWith expectedResult: Result<Void, Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         action()
 
         let receivedResult = Result { try sut.validateCache() }

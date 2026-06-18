@@ -17,7 +17,7 @@ enum AsyncResult {
 class LoaderSpy<Param, Resource: Sendable> {
     private(set) var requests = [(
         param: Param,
-        publisher: AsyncThrowingStream<Resource, Error>,
+        stream: AsyncThrowingStream<Resource, Error>,
         continuation: AsyncThrowingStream<Resource, Error>.Continuation,
         result: AsyncResult?
     )]()

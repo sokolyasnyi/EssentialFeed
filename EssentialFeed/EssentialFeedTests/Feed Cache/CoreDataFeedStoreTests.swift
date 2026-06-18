@@ -79,7 +79,7 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
     // MARK: Helpers
 
     private func makeSUT(_ test: @Sendable @escaping (CoreDataFeedStore) -> Void,
-                         file: StaticString = #file,
+                         file: StaticString = #filePath,
                          line: UInt = #line) async throws {
         let storeURL = URL(fileURLWithPath: "/dev/null")
         let sut = try CoreDataFeedStore(storeURL: storeURL)
