@@ -82,7 +82,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: configuration)
@@ -92,7 +92,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         return sut
     }
 
-    private func resultValuesFor(_ values: (data: Data?, response: URLResponse?, error: Error?), file: StaticString = #file, line: UInt = #line) async -> (data: Data, response: HTTPURLResponse)? {
+    private func resultValuesFor(_ values: (data: Data?, response: URLResponse?, error: Error?), file: StaticString = #filePath, line: UInt = #line) async -> (data: Data, response: HTTPURLResponse)? {
         do {
             let result = try await resultFor(values, file: file, line: line)
             return result
@@ -102,7 +102,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
     }
 
-    private func resultErrorFor(_ values: (data: Data?, response: URLResponse?, error: Error?)? = nil, taskHandler: (Task<(Data, HTTPURLResponse), Error>) -> Void = { _ in }, file: StaticString = #file, line: UInt = #line) async -> Error? {
+    private func resultErrorFor(_ values: (data: Data?, response: URLResponse?, error: Error?)? = nil, taskHandler: (Task<(Data, HTTPURLResponse), Error>) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) async -> Error? {
         do {
             let result = try await resultFor(values, taskHandler: taskHandler, file: file, line: line)
             XCTFail("Expected failure, got \(result) instead", file: file, line: line)
@@ -112,7 +112,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
     }
 
-    private func resultFor(_ values: (data: Data?, response: URLResponse?, error: Error?)?, taskHandler: (Task<(Data, HTTPURLResponse), Error>) -> Void = { _ in },  file: StaticString = #file, line: UInt = #line) async throws -> (Data, HTTPURLResponse) {
+    private func resultFor(_ values: (data: Data?, response: URLResponse?, error: Error?)?, taskHandler: (Task<(Data, HTTPURLResponse), Error>) -> Void = { _ in },  file: StaticString = #filePath, line: UInt = #line) async throws -> (Data, HTTPURLResponse) {
         values.map { URLProtocolStub.stub(data: $0, response: $1, error: $2) }
 
         let sut = makeSUT(file: file, line: line)

@@ -38,7 +38,7 @@ class CoreDataFeedImageDataStoreTests: XCTestCase, FeedImageDataStoreSpecs {
     // - MARK: Helpers
 
     private func makeSUT(_ test: @Sendable @escaping (CoreDataFeedStore, URL) -> Void,
-        file: StaticString = #file, line: UInt = #line) async throws {
+        file: StaticString = #filePath, line: UInt = #line) async throws {
         let storeURL = URL(fileURLWithPath: "/dev/null")
         let sut = try CoreDataFeedStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
