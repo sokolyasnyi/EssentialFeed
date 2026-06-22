@@ -5,96 +5,105 @@
 //  Created by Станислав Соколов on 2/15/26.
 //
 
-import Combine
 import Foundation
 import EssentialFeed
 import EssentialFeediOS
 import EssentialApp
 
 extension FeedUIIntegrationTests {
-    class LoaderSpy: FeedImageDataLoader {
+    
+    @MainActor
+    class LoaderSpy {
 
         // MARK: - FeedLoader
 
-        private var feedRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
+        private var feedLoader = EssentialAppTests.LoaderSpy<Void, Paginated<FeedImage>>()
 
         var loadFeedCallCount: Int {
-            feedRequests.count
+            feedLoader.requests.count
         }
 
-        func loadPublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
-            let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
-            feedRequests.append(publisher)
-            return publisher.eraseToAnyPublisher()
+        func loadFeed() async throws -> Paginated<FeedImage> {
+            try await feedLoader.load(())
         }
 
-        func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
-            feedRequests[index].send(Paginated<FeedImage>(items: feed, loadMorePublisher: { [weak self] in
-                self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
-            }))
-            feedRequests[index].send(completion: .finished)
+        func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) async {
+            await feedLoader.complete(
+                with: Paginated<FeedImage>(
+                    items: feed,
+                    loadMore: { @MainActor [weak self] in
+                        try await self?.loadMore() ?? Paginated(items: [])
+                    }),
+                at: index)
         }
 
-        func completeFeedLoadingWithError(at index: Int = 0) {
-            let error = NSError(domain: "an error", code: 0)
-            feedRequests[index].send(completion: .failure(error))
+        func completeFeedLoadingWithError(at index: Int = 0) async {
+            await feedLoader.fail(with: anyNSError(), at: index)
         }
 
         // MARK: - LoadMoreFeedLoader
 
-        private var loadMoreRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
+        private var loadMoreLoader = EssentialAppTests.LoaderSpy<Void, Paginated<FeedImage>>()
 
         var loadMoreCallCount: Int {
-            loadMoreRequests.count
+            loadMoreLoader.requests.count
         }
 
-        func loadMorePublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
-            let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
-            loadMoreRequests.append(publisher)
-            return publisher.eraseToAnyPublisher()
+        func loadMore() async throws -> Paginated<FeedImage> {
+            try await loadMoreLoader.load(())
         }
 
-        func completeLoadMore(with feed: [FeedImage] = [], lastPage: Bool = false, at index: Int = 0) {
-            loadMoreRequests[index].send(Paginated<FeedImage>(
-                items: feed,
-                loadMorePublisher: lastPage ? nil : { [weak self] in
-                    self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
-                }))
+        func completeLoadMore(with feed: [FeedImage] = [], lastPage: Bool = false, at index: Int = 0) async {
+            let loadMore: @Sendable () async throws -> Paginated<FeedImage> = { @MainActor [weak self] in
+                try await self?.loadMore() ?? Paginated(items: [])
+            }
+
+            await loadMoreLoader.complete(
+                with: Paginated<FeedImage>(
+                    items: feed,
+                    loadMore: lastPage ? nil : loadMore),
+                at: index)
         }
 
-        func completeLoadMoreWithError(at index: Int = 0) {
-            loadMoreRequests[index].send(completion: .failure(anyNSError()))
+        func completeLoadMoreWithError(at index: Int = 0) async {
+            await loadMoreLoader.fail(with: anyNSError(), at: index)
         }
 
         // MARK: - FeedImageDataLoader
 
-        private struct TaskSpy: FeedImageDataLoaderTask {
-            let cancelCallback: () -> Void
-            func cancel() {
-                cancelCallback()
-            }
-        }
-
-        private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
+        private var imageLoader = EssentialAppTests.LoaderSpy<URL, Data>()
 
         var loadedImageURLs: [URL] {
-            imageRequests.map { $0.url }
+            return imageLoader.requests.map { $0.param }
         }
 
-        private(set) var cancelledImageURLs = [URL]()
-
-        func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-            imageRequests.append((url, completion))
-            return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
+        var cancelledImageURLs: [URL] {
+            return imageLoader.requests.filter({ $0.result == .cancelled }).map { $0.param }
         }
 
-        func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-            imageRequests[index].completion(.success(imageData))
+        private struct NoResponse: Error {}
+        private struct Timeout: Error {}
+
+        func loadImageData(from url: URL) async throws -> Data {
+            try await imageLoader.load(url)
         }
 
-        func completeImageLoadingWithError(at index: Int = 0) {
-            imageRequests[index].completion(.failure(anyNSError()))
+        func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) async {
+            await imageLoader.complete(with: imageData, at: index)
+        }
+
+        func completeImageLoadingWithError(at index: Int = 0) async {
+            await imageLoader.fail(with: anyNSError(), at: index)
+        }
+
+        func imageResult(at index: Int, timeout: TimeInterval = 1) async throws -> AsyncResult {
+            try await imageLoader.result(at: index, timeout: timeout)
+        }
+
+        func cancelPendingRequests() async throws {
+            try await imageLoader.cancelPendingRequests()
+            try await feedLoader.cancelPendingRequests()
+            try await loadMoreLoader.cancelPendingRequests()
         }
     }
-
 }
